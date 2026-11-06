@@ -1,0 +1,19 @@
+import { createSlice } from "@reduxjs/toolkit";
+
+const navSlice = createSlice({
+  name: "navigation",
+  initialState: {
+    isMenuOpen: true,
+  },
+  reducers: {
+    toggleMenuClick: (state, action) => {
+      state.isMenuOpen = !state.isMenuOpen;
+    },
+    closeMenu: (state) => {
+      state.isMenuOpen = false;
+    },
+  },
+});
+
+export const { toggleMenuClick, closeMenu } = navSlice.actions;
+export default navSlice.reducer;
