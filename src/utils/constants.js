@@ -3,3 +3,6 @@ export const YOUTUBE_VIDEO_KEY =
   import.meta.env.VITE_YOUTUBE_API_KEY;
 
 const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
+
+export const YOUTUBE_SUGGESSTION_API =
+  "http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=";

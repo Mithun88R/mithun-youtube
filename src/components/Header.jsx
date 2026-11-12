@@ -1,13 +1,39 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { toggleMenuClick } from "../redux/slice/navSlice";
+import { YOUTUBE_SUGGESSTION_API } from "../utils/constants";
+import { cacheResults } from "../redux/slice/searchSlice";
+import { Link } from "react-router-dom";
 
 const Header = () => {
-  const isMenuOpen = useSelector((store) => store.nav.isMenuOpen);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const timer = setTimeout(() => getSearchSuggestions(), 200);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchQuery]);
+
+  const getSearchSuggestions = async () => {
+    const data = await fetch(YOUTUBE_SUGGESSTION_API + searchQuery);
+    const response = await data.json();
+    console.log("suggestion", response[1]);
+    setSuggestions(response[1]);
+    console.log("searchQuery", searchQuery);
+    dispatch(
+      cacheResults({
+        [searchQuery]: response[1],
+      }),
+    );
+  };
+
   const handleMenuBar = () => {
     console.log("Menu Button Clicked");
-    console.log("menuToggle", isMenuOpen);
+
     dispatch(toggleMenuClick());
   };
 
@@ -20,21 +46,38 @@ const Header = () => {
           alt="menu_icon"
           onClick={handleMenuBar}
         />
-        <img
-          className=" h-8 w-30 object-cover ml-2"
-          src="https://zonalogo.com/assets/youtube-logo-png-svg.webp?asset=2008&w=320"
-          alt="youtube_logo"
-        />
+        <a href="/">
+          <img
+            className=" h-8 w-30 object-cover ml-2"
+            src="https://zonalogo.com/assets/youtube-logo-png-svg.webp?asset=2008&w=320"
+            alt="youtube_logo"
+          />
+        </a>
       </div>
       <div className="col-span-10 items-center">
         <input
           type="text"
           placeholder="Search..."
           className="border-2 w-1/2 focus:outline-none  text-white rounded-l-2xl p-2"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onFocus={() => setShowSuggestions(true)}
+          onBlur={() => setShowSuggestions(false)}
         />
         <button className="bg-gray-800 border-2 text-white p-2 cursor-pointer  rounded-r-2xl">
           🔍
         </button>
+        {showSuggestions && searchQuery.trim() && suggestions.length > 0 && (
+          <div className="absolute bg-white w-[36%] p-2 shadow-lg  rounded-lg">
+            <ul>
+              {suggestions.map((suggestion, index) => (
+                <li key={index} className="cursor-pointer hover:bg-gray-200">
+                  🔍 {suggestion}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
       <div className="col-span-1">
         <img
