@@ -7,7 +7,7 @@ const VideoCard = ({ info }) => {
   const { viewCount } = statistics;
 
   return (
-    <div className="m-2 p-2 w-72 shadow-lg">
+    <div className="m-2 p-2 w-72 h-80 shadow-lg">
       <img
         className="rounded-lg hover:opacity-80 cursor-pointer"
         src={thumbnails.medium.url}

@@ -10,7 +10,7 @@ const ChatMessage = ({ name, message }) => {
           alt="user_icon"
         />
         <p className="p-2 font-bold">{name}</p>
-        <p className="p-2 wrap-normal">{message}</p>
+        <p className="p-2 wrap-break-word">{message}</p>
       </div>
     </div>
   );
